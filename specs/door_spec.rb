@@ -19,7 +19,7 @@ describe 'testing unlocked? method' do
 
   it 'must return a boolean if asked whether the door is locked or unlocked' do
     door_opened.unlocked?.must_equal true
-    door_closed_locked.locked?.must_equal false
+    door_closed_locked.unlocked?.must_equal false
   end
 end
 
@@ -40,12 +40,12 @@ describe 'Door class open instance method' do
   end
 
   it 'must not change and raise a method error if the door is already open' do
-    door_opened.open.must_raise ArgumentError
+    expect (proc {door_opened.open}).must_raise ArgumentError
     door_opened.open?.must_equal true
   end
 
   it 'must not open and raise a method error if the door is locked' do
-    door_closed_locked.open.must_raise ArgumentError
+    expect (proc {door_closed_locked.open}).must_raise ArgumentError
     door_closed_locked.open?.must_equal false
   end
 end
@@ -66,7 +66,7 @@ describe 'Door class close instance method' do
   end
 
   it 'must not change and raise a method error if the door is already closed' do
-    door_closed_unlocked.close.must_raise ArgumentError
+    expect (proc {door_closed_unlocked.close}).must_raise ArgumentError
     door_closed_unlocked.open?.must_equal false
   end
 end
@@ -87,7 +87,7 @@ describe 'Door class lock instance method' do
   end
 
   it 'must not change and raise a argument error if the door is already locked' do
-    door_closed_locked.lock.must_raise ArgumentError
+    expect (proc {door_closed_locked.lock}).must_raise ArgumentError
     door_closed_locked.unlocked?.must_equal false
   end
 end
@@ -108,7 +108,20 @@ describe 'Door class unlock instance method' do
   end
 
   it 'must not change and raise a argument error if the door is already locked' do
-    door_closed_unlocked.lock.must_raise ArgumentError
+    expect (proc {door_closed_unlocked.unlock}).must_raise ArgumentError
     door_closed_unlocked.unlocked?.must_equal true
+  end
+end
+
+
+describe 'testing Door read instance method' do
+  let (:door) {Door.new}
+
+  it 'must return a string' do
+    door.inscription.must_be_kind_of String
+  end
+
+  it 'must not be changeable' do
+    expect (proc {door.inscription = "this was made from a tree"}).must_raise NoMethodError
   end
 end
